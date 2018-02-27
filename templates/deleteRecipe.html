@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+
+<html>
+	
+	<head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta charset="utf-8">
+		<title>Healthy Recipes - Delete {{deleteRecipe.name}}</title>
+        <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+        <script defer src="/static/fontawesome-all.min.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+        <link rel=stylesheet href="{{ url_for('static', filename='styles.css') }}">
+	</head>
+	
+    <body>
+
+        <!-- Start Header -->
+        <header>
+            <nav id="sideNav">
+                <button id="sideButton" onclick="closeSideBar()"><i class="fas fa-bars fa-2x"></i></button>
+                <div id="userDetails">
+                    <img id="userPic" src="{{login_session['picture']}}">
+                    <p id="userName">{{login_session['username']}}</p>
+                </div>
+
+                <ul id="courseList">
+                <!-- iterate through all courses -->
+                {%for i in all_courses%}
+                    <li><a href="{{url_for('courseRecipes', course_id=i.id)}}">{{i.name}}</a></li>
+                {% endfor %}
+                </ul>
+            </nav>
+
+            <div id="topNav">
+                <button id="sideButton" onclick="openSideBar()"><i class="fas fa-bars fa-2x fw"></i></button>
+                <a id="homeButton" href="{{url_for('homePage')}}"><i class="fas fa-home fa-lg fw"></i></a>
+            </div>
+
+        </header>
+        <!-- End Header -->
+
+        <div class="container">
+
+            <!-- Start Main -->
+            <main>
+
+                <!-- Display Recipe Name -->
+                <h2 class="heading">Are you sure you want to delete {{deleteRecipe.name}}?</h2>
+
+                <form action="{{url_for('deleteRecipe', course_id=recipeCourse.id, recipe_id=deleteRecipe.id)}}" method="POST">
+                
+                    <input class="confirmDelete" type="submit" value="Delete Recipe">
+        
+                    <a class="cancelDelete" href="{{url_for('viewRecipe', course_id=recipeCourse.id, recipe_id=deleteRecipe.id)}}">Cancel</a>
+            
+                </form>
+                
+            </main>
+            <!-- End Main -->
+
+        </div> 
+
+        <script defer src="/static/script.js"></script>
+    </body>
+
+</html>

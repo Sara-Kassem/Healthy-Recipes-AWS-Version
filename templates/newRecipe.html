@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+
+<html>
+	
+	<head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta charset="utf-8">
+        <title>Healthy Recipes - Add New Recipe</title>
+        <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+        <script defer src="/static/fontawesome-all.min.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+        <link rel=stylesheet href="{{ url_for('static', filename='styles.css') }}">
+	</head>
+	
+    <body>
+
+        <!-- Start Header -->
+        <header>
+            <nav id="sideNav">
+                <button id="sideButton" onclick="closeSideBar()"><i class="fas fa-bars fa-2x"></i></button>
+                <div id="userDetails">
+                    <img id="userPic" src="{{login_session['picture']}}">
+                    <p id="userName">{{login_session['username']}}</p>
+                </div>
+
+                <ul id="courseList">
+                <!-- iterate through all courses -->
+                {%for i in all_courses%}
+                    <li><a href="{{url_for('courseRecipes', course_id=i.id)}}">{{i.name}}</a></li>
+                {% endfor %}
+                </ul>
+            </nav>
+
+            <div id="topNav">
+                <button id="sideButton" onclick="openSideBar()"><i class="fas fa-bars fa-2x fw"></i></button>
+                <a id="homeButton" href="{{url_for('homePage')}}"><i class="fas fa-home fa-lg fw"></i></a>
+            </div>
+
+        </header>
+        <!-- End Header -->
+
+        <div class="container">
+            <!-- Start Main -->
+            <main>
+               
+                <h2 class="heading">Add New Recipe</h2>
+
+                <form id="newRecipe" action="{{url_for('newRecipe', course_id=recipeCourse.id)}}" method="POST">
+
+                    <label for="newRecipeName">Recipe Name:</label>
+
+                    <input type="text" id="newRecipeName" name="newRecipeName" placeholder="New Recipe Name" required>
+
+                    <div id="chooseRecipeImage">
+                        <label id="uploadImageLabel" for="uploadImage">Upload Image</label>
+
+                        <div id="imagePreview"></div>
+
+                        <input id="uploadImage" name="newImage" type="file" accept=".jpg, .jpeg, .png">
+                    </div>
+
+                    <p id="RecipeHint">
+                        Hint: for the Ingredients and Directions to be displayed correctly on the website, 
+                        add each ingredient/step in a seperate line.<br/>
+                        You don't need to add a number for ordering before any ingredient/step.
+                    </p>
+
+                    <label for="newIngredients">Ingredients:</label>
+
+                    <textarea id="newIngredients" contenteditable="true" name="newIngredients" required></textarea>
+
+                    <label for="newDirections">Directions:</label>
+
+                    <textarea id="newDirections" contenteditable="true" name="newDirections" required></textarea>
+
+                    <div id="addRecipeButtons">
+                        <input id="addSubmit" type="submit" value="Add Recipe">
+
+                        <a id="addCancel" href="{{url_for('courseRecipes', course_id=recipeCourse.id)}}">Cancel</a>
+                    </div>
+            
+                </form>
+
+            </main>
+            <!-- End Main -->
+        
+        </div>
+
+        <script defer src="/static/script.js"></script>
+
+    </body>
+
+</html>

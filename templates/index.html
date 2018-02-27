@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+
+<html>
+	
+	<head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="utf-8">
+        <title>Healthy Recipes</title>
+        <script defer src="/static/fontawesome-all.min.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+        <link rel=stylesheet href="{{ url_for('static', filename='styles.css') }}">
+	</head>
+	
+	<body>
+
+        <!-- Start Header -->
+        <header>
+            <nav id="sideNav">
+                <button id="sideButton" onclick="closeSideBar()"><i class="fas fa-bars fa-2x"></i></button>
+                
+                <div id="userDetails">
+                    <img id="userPic" src="{{login_session['picture']}}">
+                    <p id="userName">{{login_session['username']}}</p>
+                </div>
+
+                <ul id="courseList">
+                <!-- iterate through all courses -->
+                {%for i in all_courses%}
+                    <li><a href="{{url_for('courseRecipes', course_id=i.id)}}">{{i.name}}</a></li>
+                {% endfor %}
+                </ul>
+                
+                <div id="logStatus">
+                    <a id="signIn" href="{{url_for('showLogin', next=request.endpoint)}}">Login</a>
+                    <a id="signOut" href="{{url_for('gdisconnect', next=request.endpoint)}}">Logout</a>
+                </div>
+            </nav>
+
+            <div id="topNav">
+                <button id="sideButton" onclick="openSideBar()"><i class="fas fa-bars fa-2x fw"></i></button>
+                <a id="homeButton" href="{{url_for('homePage')}}"><i class="fas fa-home fa-lg fw"></i></a>
+            </div>
+
+        </header>
+        <!-- End Header -->
+
+        <div id="flashMessages">
+            <!--MESSAGE FLASHING EXAMPLE -->
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+
+            <ul class="flashList">
+            {% for message in messages %}
+                <li class="flashMsg"><strong>{{message}}</strong></li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            {% endwith %}
+        </div>
+
+        <div class="container">
+
+            <a id="logoLink" href="{{url_for('homePage')}}">
+                <img id="logoImg" src="{{url_for('static', filename='healthy-recipes-logo.jpg')}}" alt="Healty Recipes Logo">
+            </a>
+
+            <!-- Start Main -->
+            <main>
+
+                <h1 class="heading">Latest Added Recipes</h1>
+
+                <div class="latestRecipes">
+                    <!-- Diplay Latest Recipes -->
+                    {% for i in latestRecipes %}
+                    
+                    <section class="recipe">
+                        <div id="latestRecipeImg">
+                            {% if i.image %}
+                            <img src="{{url_for('static', filename=i.image)}}" alt="{{i.name}}">
+                            {% else %}
+                            <img src="{{url_for('static', filename='no-image.jpg')}}" alt="{{i.name}}">
+                            {% endif %}
+                        </div>
+                        <p id="latestRecipeName">{{i.name}}</p>
+                        <a id="latestRecipeLink" href="{{url_for('viewRecipe', course_id=i.course_id, recipe_id=i.id)}}">View Recipe</a>
+                    </section>
+
+                    {% endfor %}
+                </div>
+
+            </main>
+            <!-- End Main -->
+            
+        </div> 
+
+        <script defer src="/static/script.js"></script>
+
+        <script>
+
+            var logCheck = "{{login_session['username']}}";
+
+            console.log('hey' + logCheck + "nono");
+
+            if (logCheck) {
+                document.getElementById("signIn").style.display = "none";
+            } else {
+                document.getElementById("signOut").style.display = "none";
+                document.getElementById("userDetails").style.display = "none";
+            }
+
+        </script>
+
+	</body>
+
+</html>

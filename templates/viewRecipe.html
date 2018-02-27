@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+
+<html>
+	
+	<head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta charset="utf-8">
+		<title>Healthy Recipes - {{viewRecipe.name}}</title>
+        <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+        <script defer src="/static/fontawesome-all.min.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+        <link rel=stylesheet href="{{ url_for('static', filename='styles.css') }}">
+	</head>
+	
+	<body>
+        
+        <!-- Start Header -->
+        <header>
+            <nav id="sideNav">
+                <button id="sideButton" onclick="closeSideBar()"><i class="fas fa-bars fa-2x"></i></button>
+                <div id="userDetails">
+                    <img id="userPic" src="{{login_session['picture']}}">
+                    <p id="userName">{{login_session['username']}}</p>
+                </div>
+
+                <ul id="courseList">
+                <!-- iterate through all courses -->
+                {%for i in all_courses%}
+                    <li><a href="{{url_for('courseRecipes', course_id=i.id)}}">{{i.name}}</a></li>
+                {% endfor %}
+                </ul>
+                
+                <div id="logStatus">
+                    <a id="signIn" href="{{url_for('showLogin', next=request.endpoint, course_id=recipeCourse.id, recipe_id=viewRecipe.id)}}">Login</a>
+                    <a id="signOut" href="{{url_for('gdisconnect', next=request.endpoint, course_id=recipeCourse.id, recipe_id=viewRecipe.id)}}">Logout</a>
+                </div>
+            </nav>
+
+            <div id="topNav">
+                <button id="sideButton" onclick="openSideBar()"><i class="fas fa-bars fa-2x fw"></i></button>
+                <a id="homeButton" href="{{url_for('homePage')}}"><i class="fas fa-home fa-lg fw"></i></a>
+            </div>
+
+        </header>
+        <!-- End Header -->
+
+        <div id="flashMessages">
+            <!--MESSAGE FLASHING EXAMPLE -->
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+
+            <ul class="flashList">
+            {% for message in messages %}
+                <li class="flashMsg"><strong>{{message}}</strong></li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            {% endwith %}
+        </div>
+
+        <div class="container">
+
+            <!-- Start Main -->
+            <main>
+
+                <!-- Display Recipe Name -->
+                <h1 class="heading recipeName">{{viewRecipe.name}}</h1>
+
+                {% if viewRecipe.image %}
+
+                <!-- Display Recipe Image -->
+                <img id="recipeImg" src="{{url_for('static', filename=viewRecipe.image)}}">
+
+                {% else %}
+
+                <img id="recipeImg" src="{{url_for('static', filename='no-image.jpg')}}">
+
+                {% endif %}
+                
+                <section>
+                   
+                    <h2 class="subHeading">Ingredients:</h2>
+                    <ul id="ingredientsList">
+                        <!-- iterate through all ingredients -->
+                        {% for i in ingredients %}
+                        
+                        <div class="ingredient">
+                            <i class="fas fa-plus-circle fa-fw"></i>
+                            <li>{{i.ingredient}}</li>
+                        </div>
+                        {% endfor %}
+                    </ul>
+
+                </section>
+
+                <section>
+
+                    <h2 class="subHeading">Directions:</h2>
+                    <ul id="directionsList">
+                        <!-- iterate through all Directions -->
+                        {% for i in directions %}
+
+                        <div class="direction">
+                            <i class="fas fa-utensils fa-fw"></i>
+                            <li>{{i.step}}</li>
+                        </div>
+                        {% endfor %}
+                    </ul>
+
+                </section>
+                
+                <section id="buttomButtons">
+
+                    <a class="editRecipe" href="{{url_for('editRecipe', course_id=recipeCourse.id, recipe_id=viewRecipe.id)}}">Edit Recipe</a>
+                    <a class="deleteRecipe" href="{{url_for('deleteRecipe', course_id=recipeCourse.id, recipe_id=viewRecipe.id)}}">Delete Recipe</a>
+                    <a class="backToCourse" href="{{url_for('courseRecipes', course_id=recipeCourse.id)}}">Back to {{recipeCourse.name}}</a>
+
+                </section>
+
+            </main>
+            <!-- End Main -->
+
+        </div> 
+
+        <script defer src="/static/script.js"></script>
+
+        <script>
+
+            var logCheck = "{{login_session['username']}}"
+
+            if (logCheck) {
+                document.getElementById("signIn").style.display = "none";
+            } else {
+                document.getElementById("signOut").style.display = "none";
+                document.getElementById("userDetails").style.display = "none";
+            }
+
+        </script>
+
+	</body>
+
+</html>

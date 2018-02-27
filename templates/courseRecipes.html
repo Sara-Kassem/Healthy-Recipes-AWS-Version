@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+
+<html>
+    
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Healthy Recipes - {{course.name}}</title>
+        <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+        <script defer src="/static/fontawesome-all.min.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+        <link rel=stylesheet href="{{ url_for('static', filename='styles.css') }}">
+	</head>
+	
+	<body>
+
+        <!-- Start Header -->
+        <header>
+            <nav id="sideNav">
+                <button id="sideButton" onclick="closeSideBar()"><i class="fas fa-bars fa-2x"></i></button>
+                <div id="userDetails">
+                    <img id="userPic" src="{{login_session['picture']}}">
+                    <p id="userName">{{login_session['username']}}</p>
+                </div>
+
+                <ul id="courseList">
+                <!-- iterate through all courses -->
+                {%for i in all_courses%}
+                    <li><a href="{{url_for('courseRecipes', course_id=i.id)}}">{{i.name}}</a></li>
+                {% endfor %}
+                </ul>
+                
+                <div id="logStatus">
+                    <a id="signIn" href="{{url_for('showLogin', next=request.endpoint, course_id=course.id)}}">Login</a>
+                    <a id="signOut" href="{{url_for('gdisconnect', next=request.endpoint, course_id=course.id)}}">Logout</a>
+                </div>
+            </nav>
+
+            <div id="topNav">
+                <button id="sideButton" onclick="openSideBar()"><i class="fas fa-bars fa-2x fw"></i></button>
+                <a id="homeButton" href="{{url_for('homePage')}}"><i class="fas fa-home fa-lg fw"></i></a>
+            </div>
+
+        </header>
+        <!-- End Header -->
+
+        <div id="flashMessages">
+            <!--MESSAGE FLASHING EXAMPLE -->
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+
+            <ul class="flashList">
+            {% for message in messages %}
+                <li class="flashMsg"><strong>{{message}}</strong></li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            {% endwith %}
+        </div>
+        
+        <div class="container">
+
+            <!-- Start Main -->
+            <main>
+
+                <!-- Display the course name -->
+                <h1 class="heading">{{course.name}}</h1>
+
+                <div class="courseRecipes">
+                    <!-- Display all recipes in the course -->
+                    {% for i in courseRecipes %}
+                    
+                    <section class="recipe">
+                        <div id="courseRecipeImg">
+                            {% if i.image %}
+                            <img src="{{url_for('static', filename=i.image)}}" alt="{{i.name}}">
+                            {% else %}
+                            <img src="{{url_for('static', filename='no-image.jpg')}}" alt="{{i.name}}">
+                            {% endif %}
+                        </div>
+                        <p id="courseRecipeName">{{i.name}}</p>
+                        <a id="courseRecipeLink" href="{{url_for('viewRecipe', course_id=i.course_id, recipe_id=i.id)}}">View Recipe</a>
+                    </section>
+                    
+                    {% endfor %}
+
+                    <a id="addRecipe" href="{{url_for('newRecipe', course_id=course.id)}}">Add New Recipe</a>
+                </div>
+
+
+            </main>
+            <!-- End Main -->
+        </div> 
+
+        <script defer src="/static/script.js"></script>
+
+        <script>
+
+            var logCheck = "{{login_session['username']}}"
+
+            if (logCheck) {
+                document.getElementById("signIn").style.display = "none";
+            } else {
+                document.getElementById("signOut").style.display = "none";
+                document.getElementById("userDetails").style.display = "none";
+            }
+
+        </script>
+
+	</body>
+
+</html>

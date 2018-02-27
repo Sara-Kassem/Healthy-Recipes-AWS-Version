@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+
+<html>
+	
+	<head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta charset="utf-8">
+        <title>Healthy Recipes - Edit {{editRecipe.name}}</title>
+        <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+        <script defer src="/static/fontawesome-all.min.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+        <link rel=stylesheet href="{{ url_for('static', filename='styles.css') }}">
+	</head>
+	
+    <body>
+        
+        <!-- Start Header -->
+        <header>
+            <nav id="sideNav">
+                <button id="sideButton" onclick="closeSideBar()"><i class="fas fa-bars fa-2x"></i></button>
+                <div id="userDetails">
+                    <img id="userPic" src="{{login_session['picture']}}">
+                    <p id="userName">{{login_session['username']}}</p>
+                </div>
+
+                <ul id="courseList">
+                <!-- iterate through all courses -->
+                {%for i in all_courses%}
+                    <li><a href="{{url_for('courseRecipes', course_id=i.id)}}">{{i.name}}</a></li>
+                {% endfor %}
+                </ul>
+            </nav>
+
+            <div id="topNav">
+                <button id="sideButton" onclick="openSideBar()"><i class="fas fa-bars fa-2x fw"></i></button>
+                <a id="homeButton" href="{{url_for('homePage')}}"><i class="fas fa-home fa-lg fw"></i></a>
+            </div>
+
+        </header>
+        <!-- End Header -->
+
+        <div class="container">
+
+            <!-- Start Main -->
+            <main>
+
+                <!-- Display Recipe Name -->
+                <h2 class="heading">Edit {{editRecipe.name}}</h2>
+
+                <form id="editRecipe" action="{{url_for('editRecipe', course_id=recipeCourse.id, recipe_id=editRecipe.id)}}" method="POST">
+                    
+                    <label for="updateName">Recipe Name:</label>
+                    
+                    <input autofocus type="text" id="updateName" name="updateName" placeholder="{{editRecipe.name}}">
+    
+                    <label for="updateCourse">Course:</label>
+
+                    <select id="updateCourse" name="updateCourse">
+                        <!-- iterate through all courses -->
+                        {% for i in all_courses %}
+                        <option value="{{i.name}}">{{i.name}}</option> 
+                        {% endfor %}
+    
+                    </select>
+
+                    <div id="chooseRecipeImage">
+                        <label id="uploadImageLabel" for="uploadImage">Upload Image</label>
+
+                        <div id="imagePreview"></div>
+
+                        <input id="uploadImage" name="updateImage" type="file" accept=".jpg, .jpeg, .png">
+                    </div>
+
+                    <p id="RecipeHint">
+                        Hint: for the Ingredients and Directions to be displayed correctly on the website, 
+                        add each ingredient/step in a seperate line.<br/>
+                        You don't need to add a number for ordering before any ingredient/step.
+                    </p>
+
+                    <label for="updateIngredients">Ingredients:</label>
+
+                    <!-- iterate through all ingredients -->
+                    <textarea id="updateIngredients" name="updateIngredients" required>{% for i in ingredients %}
+{{i.ingredient}}{% endfor %}</textarea>
+
+                    <label for="updateDirections">Directions:</label>
+
+                    <!-- iterate through all Directions -->
+                    <textarea id="updateDirections" name="updateDirections" required>{% for i in directions %}
+{{i.step}}{% endfor %}</textarea>
+                
+                    <div id="editRecipeButtons">
+                        <input id="editSubmit" type="submit" value="Edit">
+        
+                        <a id="editCancel" href="{{url_for('viewRecipe', course_id=recipeCourse.id, recipe_id=editRecipe.id)}}">Cancel</a>
+                    </div>
+                
+                </form>
+
+            </main>
+            <!-- End Main -->
+                    
+        </div>
+
+        <script defer src="/static/script.js"></script>
+
+    </body>
+
+</html>
